@@ -3,6 +3,7 @@ package edu.cnm.deepdive.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.cnm.deepdive.model.Game;
+import edu.cnm.deepdive.model.Guess;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor.Level;
@@ -34,13 +35,15 @@ public interface CodebreakerServiceProxy {
   @GET("codes/{id}")
   Call<Game> getGame(@Path("id") String id);
 
+  @POST("codes/{id}/guesses")
+  Call<Guess> submitGuess(@Path("id") String id, @Body Guess guess);
+
   static CodebreakerServiceProxy getInstance() {
     return InstanceHolder.INSTANCE;
   }
 
   /**
-   * Implements the "lazy" <a
-   * href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">initialization-on-demand
+   * Implements the "lazy" <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">initialization-on-demand
    * holder idiom</a>. This creates an instance of {@link CodebreakerServiceProxy} only when the
    * {@code InstanceHolder} class is initialized; since this initialization happens only once, and
    * since only 1 thread is allowed to load a class into memory, this guarantees that only one

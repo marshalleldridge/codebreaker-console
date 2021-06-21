@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.service;
 
 import edu.cnm.deepdive.model.Game;
+import edu.cnm.deepdive.model.Guess;
 import java.io.IOException;
 import retrofit2.Response;
 
@@ -40,7 +41,16 @@ public class GameRepository {
       throw new IllegalArgumentException();
     } //end if
     return response.body();
+  }
 
+  public Guess newGuess(Game game, String text) throws IOException {
+    Guess guess = new Guess();
+    guess.setText(text);
+    Response<Guess> response = proxy.submitGuess(game.getId(), guess).execute();
+    if (!response.isSuccessful()) {
+      throw new IllegalArgumentException();
+    }
+    return response.body();
   }
 
   // TODO Define methods for obtaining a single existing game, the list of guesses in a game, and
