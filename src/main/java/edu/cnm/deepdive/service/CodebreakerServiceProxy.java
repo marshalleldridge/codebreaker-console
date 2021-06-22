@@ -42,6 +42,10 @@ public interface CodebreakerServiceProxy {
     return InstanceHolder.INSTANCE;
   }
 
+  static Gson getGsonInstance() {
+    return InstanceHolder.GSON;
+  }
+
   /**
    * Implements the "lazy" <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">initialization-on-demand
    * holder idiom</a>. This creates an instance of {@link CodebreakerServiceProxy} only when the
@@ -52,12 +56,13 @@ public interface CodebreakerServiceProxy {
    */
   class InstanceHolder {
 
+    private static final Gson GSON;
     private static final CodebreakerServiceProxy INSTANCE;
 
     static {
       // Creation of instances of Gson, OkHttpClient, Retrofit all employ the "builder pattern", as
       // supported by those libraries.
-      Gson gson = new GsonBuilder()
+      GSON = new GsonBuilder()
           .excludeFieldsWithoutExposeAnnotation()
           .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
           .create();
@@ -70,7 +75,7 @@ public interface CodebreakerServiceProxy {
 
       Retrofit retrofit = new Retrofit.Builder()
           .baseUrl("https://ddc-java.services/codebreaker/")
-          .addConverterFactory(GsonConverterFactory.create(gson))
+          .addConverterFactory(GsonConverterFactory.create(GSON))
           .client(client)
           .build();
 
